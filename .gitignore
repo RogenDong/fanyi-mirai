@@ -1,0 +1,14 @@
+!**/src/main/**
+
+# maven
+target/
+
+# IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+
