@@ -1,11 +1,13 @@
 package dong.bot.mirai.fanyi.util;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * 字符、字符串工具类
  *
  * @author dong
  */
-public interface CharUtil {
+public abstract class CharUtil {
 
     /**
      * 是否小写英文字母
@@ -13,7 +15,7 @@ public interface CharUtil {
      * @param c 英文字母
      * @return 是否小写
      */
-    default boolean isLow(char c) {
+    public static boolean isLow(char c) {
         return 'a' <= c && c <= 'z';
     }
 
@@ -23,7 +25,7 @@ public interface CharUtil {
      * @param c 英文字母
      * @return 是否大写
      */
-    default boolean isUp(char c) {
+    public static boolean isUp(char c) {
         return 'A' <= c && c <= 'Z';
     }
 
@@ -33,8 +35,8 @@ public interface CharUtil {
      * @param c 大写字母
      * @return 小写字母
      */
-    default char low(char c) {
-        return isLow(c) ? (char)(c + 32) : c;
+    public static char low(char c) {
+        return isLow(c) ? (char) (c + 32) : c;
     }
 
     /**
@@ -43,8 +45,8 @@ public interface CharUtil {
      * @param c 小写字母
      * @return 大写字母
      */
-    default char up(char c) {
-        return isLow(c) ? (char)(c - 32) : c;
+    public static char up(char c) {
+        return isLow(c) ? (char) (c - 32) : c;
     }
 
     /**
@@ -53,7 +55,7 @@ public interface CharUtil {
      * @param original 原字符串
      * @return 首字母大写的新字符串
      */
-    default String upperCaseInitials(String original) {
+    public static @NotNull String upperCaseInitials(@NotNull String original) {
         char[] chars = original.toCharArray();
         chars[0] = up(chars[0]);
         return String.valueOf(chars);

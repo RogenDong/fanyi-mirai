@@ -1,8 +1,10 @@
 package dong.bot.mirai.fanyi;
 
+import dong.bot.mirai.fanyi.listen.MessageListener;
 import net.mamoe.mirai.console.extension.PluginComponentStorage;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
+import net.mamoe.mirai.event.GlobalEventChannel;
 import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,10 +24,14 @@ public final class FanYi extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        LOGGER.info("关闭插件……");
     }
 
     @Override
     public void onEnable() {
+        LOGGER.info("插件已启用，开始倾听");
+        // 启用消息倾听
+        GlobalEventChannel.INSTANCE.registerListenerHost(new MessageListener());
     }
 
     @Override
