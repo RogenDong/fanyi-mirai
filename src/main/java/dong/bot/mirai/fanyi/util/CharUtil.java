@@ -60,4 +60,28 @@ public abstract class CharUtil {
         chars[0] = up(chars[0]);
         return String.valueOf(chars);
     }
+
+    public static boolean isBlank(CharSequence value) {
+        return value == null || value.toString().trim().isEmpty();
+    }
+
+    public static boolean anyBlank(CharSequence... values) {
+        for (CharSequence value : values) {
+            if (isBlank(value))
+                return true;
+        }
+        return false;
+    }
+
+    public static boolean isNullOrEmpty(CharSequence value) {
+        return value == null || value.isEmpty();
+    }
+
+    public static boolean anyNullOrEmpty(CharSequence... values) {
+        for (CharSequence value : values) {
+            if (isNullOrEmpty(value))
+                return true;
+        }
+        return false;
+    }
 }
