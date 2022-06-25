@@ -1,5 +1,6 @@
 package dong.bot.mirai.fanyi;
 
+import dong.bot.mirai.fanyi.data.conf.PluginConfig;
 import dong.bot.mirai.fanyi.listen.MessageListener;
 import net.mamoe.mirai.console.extension.PluginComponentStorage;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
@@ -36,5 +37,6 @@ public final class FanYi extends JavaPlugin {
 
     @Override
     public void onLoad(@NotNull PluginComponentStorage plugin) {
+        this.reloadPluginConfig(PluginConfig.INSTANCE);
     }
 }

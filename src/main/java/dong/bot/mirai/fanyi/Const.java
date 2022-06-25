@@ -13,7 +13,7 @@ public interface Const {
     /**
      * 语言参数的分隔符
      */
-    String LANG_SPLIT = "?";
+    String LANG_DELIMITER = "?";
 
     /**
      * 正则：匹配空格2个或以上
@@ -37,7 +37,7 @@ public interface Const {
         /**
          * 查看帮助的关键词
          */
-        String HELP = "fhh";
+        String TIP = "fhh";
 
         /**
          * 查看支持语言的关键词
@@ -50,14 +50,14 @@ public interface Const {
      */
     interface Tip {
 
-        String CMD = Keyword.TRANS + "——翻译\n" + Keyword.LANG + "——查看支持语言\n" + Keyword.HELP + "——回复本消息";
+        String KEYWORD = Keyword.TRANS + "——翻译\n" + Keyword.LANG + "——查看支持语言\n" + Keyword.TIP + "——回复本消息";
 
         /**
          * 帮助文案
          */
-        String HELP = Keyword.TRANS + "[原文语言" + LANG_SPLIT + "译文语言] <需要翻译的文本>\n" +
-                "例：\n" + Keyword.TRANS + "en" + LANG_SPLIT + "zh translate <- 英文翻译为中文\n" +
-                Keyword.TRANS + LANG_SPLIT + "jp translate <- 自动识别原文并翻译为日文\n" +
+        String TRANS = Keyword.TRANS + "[原文语言" + LANG_DELIMITER + "译文语言] <需要翻译的文本>\n" +
+                "例：\n" + Keyword.TRANS + "en" + LANG_DELIMITER + "zh translate <- 英文翻译为中文\n" +
+                Keyword.TRANS + LANG_DELIMITER + "jp translate <- 自动识别原文并翻译为日文\n" +
                 Keyword.TRANS + "大丈夫です <- 自动识别原文并翻译为中文";
 
         String LACK_ARG = "查询缺少关键信息。";

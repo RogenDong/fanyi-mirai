@@ -2,6 +2,7 @@ package dong.bot.mirai.fanyi.handle;
 
 import dong.bot.mirai.fanyi.FanYi;
 import dong.bot.mirai.fanyi.Translator;
+import dong.bot.mirai.fanyi.data.conf.PluginConfig;
 import dong.bot.mirai.fanyi.enums.Languages;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
@@ -59,7 +60,8 @@ public abstract class MessageHandle {
      */
     public static void showTip(MessageEvent event, boolean cacheReceipt) {
         LOGGER.info("showLanguages");
-        replying(Tip.CMD, cacheReceipt, event);
+        String tip = String.join("\n", PluginConfig.INSTANCE.getKeywordTips());
+        replying(tip, cacheReceipt, event);
     }
 
     /**
@@ -97,13 +99,15 @@ public abstract class MessageHandle {
                 .replaceAll(SPACES_REGEX, SPACE).split(SPACE, 3);
         // 检查参数合法
         if (args.length < 2) {
-            replying(Tip.LACK_ARG + "\n" + Tip.HELP, cacheReceipt, event);
+            String translateTip = PluginConfig.INSTANCE.getTranslateTip();
+            replying(Tip.LACK_ARG + "\n" + translateTip, cacheReceipt, event);
             return;
         }
 
         String translation;
+        String langDelimiter = PluginConfig.INSTANCE.getLangDelimiter();
         // 自动
-        if (args.length == 2 || !args[1].contains(LANG_SPLIT)) {
+        if (args.length == 2 || !args[1].contains(langDelimiter)) {
             if (USED_LANGUAGES.containsKey(sender)) {
                 var to = USED_LANGUAGES.get(sender);
                 translation = Translator.to(args[1], to);
@@ -115,7 +119,7 @@ public abstract class MessageHandle {
         }
 
         // 指定
-        var lang = args[1].split(LANG_SPLIT);
+        var lang = args[1].split(langDelimiter);
         Languages from = Languages.get(lang[0]);
         Languages to;
         if (lang.length > 1 && lang[1].length() > 0) {

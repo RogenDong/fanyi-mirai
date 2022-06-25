@@ -1,6 +1,7 @@
 package dong.bot.mirai.fanyi.listen;
 
 import dong.bot.mirai.fanyi.FanYi;
+import dong.bot.mirai.fanyi.enums.Keywords;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
@@ -10,7 +11,6 @@ import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 
-import static dong.bot.mirai.fanyi.Const.Keyword.*;
 import static dong.bot.mirai.fanyi.handle.MessageHandle.*;
 
 /**
@@ -64,13 +64,12 @@ public class MessageListener extends SimpleListenerHost {
     private void callByKeyword(@NotNull MessageEvent event, boolean cacheReceipt) {
         var msg = event.getMessage();
         var inp = msg.contentToString();
-        switch (inp) {
-            case HELP -> showTip(event, cacheReceipt);
-            case LANG -> showLanguages(event, cacheReceipt);
-            default -> {
-                if (inp.startsWith(TRANS) && inp.length() > TRANS.length())
-                    translate(event, cacheReceipt);
-            }
-        }
+        String transKeyword = Keywords.Translate.getWord();
+        if (Keywords.Tips.equals(inp))
+            showTip(event, cacheReceipt);
+        else if (Keywords.Languages.equals(inp))
+            showLanguages(event, cacheReceipt);
+        else if (inp.startsWith(transKeyword) && inp.length() > transKeyword.length())
+            translate(event, cacheReceipt);
     }
 }
