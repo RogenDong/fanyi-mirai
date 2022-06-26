@@ -1,10 +1,9 @@
 package dong.bot.mirai.fanyi.util;
 
-import dong.bot.mirai.fanyi.FanYi;
-import net.mamoe.mirai.utils.MiraiLogger;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -34,9 +33,6 @@ public class HttpUtil {
             .connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             .connectionPool(new ConnectionPool(MAX_IDLE_CONNECTIONS, KEEP_ALIVE_DURATION, TimeUnit.MINUTES))
             .build();
-
-    // 日志
-    private static final MiraiLogger LOGGER = FanYi.LOGGER;
 
     /**
      * 设置请求头
@@ -76,8 +72,7 @@ public class HttpUtil {
         try {
             var builder = new Request.Builder().url(url);
             return call(builder);
-        } catch (Exception e) {
-            LOGGER.warning("get 请求失败！url=" + url, e);
+        } catch (Exception ignored) {
         }
         return Optional.empty();
     }
@@ -93,8 +88,7 @@ public class HttpUtil {
             var builder = new Request.Builder().url(url);
             buildHeader(builder, headers);
             return call(builder);
-        } catch (Exception e) {
-            LOGGER.warning("get 请求失败！url=" + url, e);
+        } catch (Exception ignored) {
         }
         return Optional.empty();
     }
@@ -106,14 +100,18 @@ public class HttpUtil {
      * @param params form
      * @return 请求结果
      */
-    public static Optional<String> post(String url, Map<String, String> params) {
+    public static Optional<String> post(String url, Map<String, Object> params) {
         try {
-            FormBody.Builder formBody = new FormBody.Builder();
-            if (!params.isEmpty())
-                params.forEach(formBody::add);
+            FormBody.Builder formBody = new FormBody.Builder(StandardCharsets.UTF_8);
+            if (!params.isEmpty()) {
+                for (Map.Entry<String, Object> e : params.entrySet()) {
+                    if (e.getValue() == null)
+                        continue;
+                    formBody.add(e.getKey(), e.getValue().toString());
+                }
+            }
             return call(new Request.Builder().url(url).post(formBody.build()));
-        } catch (Exception e) {
-            LOGGER.warning("post 请求失败! url=" + url, e);
+        } catch (Exception ignored) {
         }
         return Optional.empty();
     }
@@ -130,8 +128,7 @@ public class HttpUtil {
             var builder = new Request.Builder();
             buildHeader(builder, headers);
             return call(builder.url(url).post(body));
-        } catch (Exception e) {
-            LOGGER.warning("post 请求失败! url=" + url, e);
+        } catch (Exception ignored) {
         }
         return Optional.empty();
     }
