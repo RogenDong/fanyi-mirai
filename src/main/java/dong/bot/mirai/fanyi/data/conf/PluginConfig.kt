@@ -16,8 +16,11 @@ import dong.bot.mirai.fanyi.Const.Tip
  */
 object PluginConfig : AutoSavePluginConfig("fanyi") {
 
-    @ValueDescription("百度翻译注册的 AppId")
+    @ValueDescription("百度 API AppId")
     var baiduAppId: String by value()
+
+    @ValueDescription("百度 API 密钥")
+    var baiduSecretKey: String by value()
 
     /**
      * 语言参数的分隔符
