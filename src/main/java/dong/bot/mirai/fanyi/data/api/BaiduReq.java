@@ -43,7 +43,7 @@ public class BaiduReq {
         map.put("q", query);
         map.put("from", from.code);
         map.put("to", to.code);
-        map.put("appId", appId);
+        map.put("appid", appId);
         map.put("salt", salt);
         map.put("sign", sign);
         return map;

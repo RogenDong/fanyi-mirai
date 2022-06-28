@@ -138,6 +138,6 @@ public class BaiduResp {
      */
     public boolean success() {
         Optional<BaiduRespCode> code = getCode();
-        return code.isPresent() && code.get() == BaiduRespCode.Success;
+        return code.isEmpty() || code.get() == BaiduRespCode.Success;
     }
 }

@@ -12,15 +12,15 @@ import java.util.Optional;
 
 public class TestMain {
 
-    private static final String API = "https://fanyi-api.baidu.com/api/trans/vip/translate";
-
     private static final ObjectMapper JACKSON = new ObjectMapper();
 
     /**
      * 需要在项目根目录创建 app.txt 文件，并写入appId 和密钥，各占一行
      */
     private static List<String> getAppKey() throws Exception {
-        return Files.readAllLines(Path.of("app.txt"));
+        List<String> lines = Files.readAllLines(Path.of("app.txt"));
+        if (lines.size() < 3) throw new Exception("参数不足。行：[appid, 密钥, API地址]");
+        return lines;
     }
 
     @Test
@@ -28,9 +28,10 @@ public class TestMain {
         List<String> ls = getAppKey();
         var appId = ls.get(0);
         var secretKey = ls.get(1);
-        var query = "hello word";
-        var form = BaiduReq.basic(query, Languages.Zh, Languages.Auto, appId, secretKey);
-        Optional<String> response = HttpUtil.post(API, form);
+        var api = ls.get(2);
+        var query = "run TestApp via terminal";
+        var form = BaiduReq.basic(query, Languages.Auto, Languages.Zh, appId, secretKey);
+        Optional<String> response = HttpUtil.post(api, form);
         if (response.isEmpty()) {
             System.out.println("no response");
             return;

@@ -39,7 +39,7 @@ public class HttpUtil {
      *
      * @param headers 请求头
      */
-    private static void buildHeader(final Request.Builder builder, Map<String, String> headers) {
+    private static void setHeader(final Request.Builder builder, Map<String, String> headers) {
         if (headers.isEmpty())
             return;
         headers.entrySet().stream()
@@ -86,7 +86,7 @@ public class HttpUtil {
     public static Optional<String> get(String url, Map<String, String> headers) {
         try {
             var builder = new Request.Builder().url(url);
-            buildHeader(builder, headers);
+            setHeader(builder, headers);
             return call(builder);
         } catch (Exception ignored) {
         }
@@ -110,7 +110,10 @@ public class HttpUtil {
                     formBody.add(e.getKey(), e.getValue().toString());
                 }
             }
-            return call(new Request.Builder().url(url).post(formBody.build()));
+            Request.Builder reqBuilder = new Request.Builder()
+                    .url(url).post(formBody.build());
+            reqBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            return call(reqBuilder);
         } catch (Exception ignored) {
         }
         return Optional.empty();
@@ -126,7 +129,7 @@ public class HttpUtil {
         try {
             var body = RequestBody.create(json, MEDIA_TYPE_JSON);
             var builder = new Request.Builder();
-            buildHeader(builder, headers);
+            setHeader(builder, headers);
             return call(builder.url(url).post(body));
         } catch (Exception ignored) {
         }
