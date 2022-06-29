@@ -3,8 +3,11 @@ package dong.bot.mirai.fanyi.data.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dong.bot.mirai.fanyi.enums.api.BaiduRespCode;
 import kotlinx.serialization.Serializable;
+import net.mamoe.mirai.utils.MiraiLogger;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * 百度 API 的响应模型
@@ -139,5 +142,24 @@ public class BaiduResp {
     public boolean success() {
         Optional<BaiduRespCode> code = getCode();
         return code.isEmpty() || code.get() == BaiduRespCode.Success;
+    }
+
+    /**
+     * 记录请求异常
+     *
+     * @param logger mirai 日志接口
+     */
+    public void logMessage(@NotNull MiraiLogger logger) {
+        Optional<BaiduRespCode> opt = getCode();
+        if (opt.isEmpty())
+            return;
+
+        BaiduRespCode error = opt.get();
+        logger.warning(String.format(
+                "异常: %s :: %s :: %s",
+                getErrorCode(),
+                getErrorMsg(),
+                error.getMessage()
+        ));
     }
 }

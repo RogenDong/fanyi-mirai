@@ -32,7 +32,7 @@ public class TestMain {
         var appId = ls.get(0);
         var secretKey = ls.get(1);
         var api = ls.get(2);
-        var query = "run TestApp via terminal";
+        var query = "hello\nworld";
         var salt = String.valueOf(System.currentTimeMillis());
         var sign = DigestUtils.md5Hex(appId + query + salt + secretKey);
         var form = BaiduReq.basic(query, Languages.Auto, Languages.Zh);
