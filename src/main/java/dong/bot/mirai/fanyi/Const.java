@@ -64,4 +64,19 @@ public interface Const {
 
         String TODO = "TODO";
     }
+
+    /**
+     * 百度接口参数
+     */
+    interface BaiduParam {
+        String QUERY = "q";
+        String FROM = "from";
+        String TO = "to";
+        String APPID = "appid";
+        String SALT = "salt";
+        String SIGN = "sign";
+        String TTS = "tts";
+        String DICT = "dict";
+        String ACTION = "action";
+    }
 }

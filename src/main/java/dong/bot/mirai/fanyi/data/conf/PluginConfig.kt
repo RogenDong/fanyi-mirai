@@ -1,13 +1,12 @@
 package dong.bot.mirai.fanyi.data.conf
 
 import dong.bot.mirai.fanyi.Const
+import dong.bot.mirai.fanyi.Const.Keyword
+import dong.bot.mirai.fanyi.Const.Tip
+import dong.bot.mirai.fanyi.enums.Keywords
 import net.mamoe.mirai.console.data.AutoSavePluginConfig
 import net.mamoe.mirai.console.data.ValueDescription
 import net.mamoe.mirai.console.data.value
-import dong.bot.mirai.fanyi.enums.Keywords
-
-import dong.bot.mirai.fanyi.Const.Keyword
-import dong.bot.mirai.fanyi.Const.Tip
 
 /**
  * 配置
@@ -16,11 +15,14 @@ import dong.bot.mirai.fanyi.Const.Tip
  */
 object PluginConfig : AutoSavePluginConfig("fanyi") {
 
-    @ValueDescription("百度 API AppId")
-    var baiduAppId: String by value()
+    @ValueDescription("API 链接索引")
+    var apis: MutableMap<String, String> by value()
 
-    @ValueDescription("百度 API 密钥")
-    var baiduSecretKey: String by value()
+    @ValueDescription("API AppId")
+    var appIds: MutableMap<String, String> by value()
+
+    @ValueDescription("API 密钥")
+    var secretKeys: MutableMap<String, String> by value()
 
     /**
      * 语言参数的分隔符
@@ -32,11 +34,13 @@ object PluginConfig : AutoSavePluginConfig("fanyi") {
      * 关键词集合
      */
     @ValueDescription("配置关键词")
-    var keywords: MutableMap<Keywords, String> by value(mutableMapOf(
-        Keywords.Translate to Keyword.TRANS,
-        Keywords.Languages to Keyword.LANG,
-        Keywords.Tips to Keyword.TIP,
-    ))
+    var keywords: MutableMap<Keywords, String> by value(
+        mutableMapOf(
+            Keywords.Translate to Keyword.TRANS,
+            Keywords.Languages to Keyword.LANG,
+            Keywords.Tips to Keyword.TIP,
+        )
+    )
 
     /**
      * 翻译的用法说明
@@ -49,4 +53,26 @@ object PluginConfig : AutoSavePluginConfig("fanyi") {
      */
     @ValueDescription("列出关键词及说明")
     var keywordTips: List<String> by value(Tip.KEYWORD.split('\n'))
+
+    /**
+     * 配置项是否可用
+     */
+    fun unavailable() = apis.isEmpty() || appIds.isEmpty() || secretKeys.isEmpty()
+
+    /**
+     * 特定 API 的配置是否可用
+     */
+    fun available() = !unavailable()
+
+    /**
+     * 特定 API 的配置是否可用
+     */
+    fun unavailable(apiName: String) = unavailable() ||
+        apis.containsKey(apiName) || appIds.containsKey(apiName) || secretKeys.containsKey(apiName)
+
+    /**
+     * 特定 API 的配置是否可用
+     */
+    fun available(apiName: String) = !unavailable(apiName)
+
 }

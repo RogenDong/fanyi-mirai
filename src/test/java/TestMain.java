@@ -3,12 +3,15 @@ import dong.bot.mirai.fanyi.data.api.BaiduReq;
 import dong.bot.mirai.fanyi.data.api.BaiduResp;
 import dong.bot.mirai.fanyi.enums.Languages;
 import dong.bot.mirai.fanyi.util.HttpUtil;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+
+import static dong.bot.mirai.fanyi.Const.BaiduParam.*;
 
 public class TestMain {
 
@@ -30,7 +33,12 @@ public class TestMain {
         var secretKey = ls.get(1);
         var api = ls.get(2);
         var query = "run TestApp via terminal";
-        var form = BaiduReq.basic(query, Languages.Auto, Languages.Zh, appId, secretKey);
+        var salt = String.valueOf(System.currentTimeMillis());
+        var sign = DigestUtils.md5Hex(appId + query + salt + secretKey);
+        var form = BaiduReq.basic(query, Languages.Auto, Languages.Zh);
+        form.put(APPID, appId);
+        form.put(SALT, salt);
+        form.put(SIGN, sign);
         Optional<String> response = HttpUtil.post(api, form);
         if (response.isEmpty()) {
             System.out.println("no response");
