@@ -20,7 +20,7 @@ public final class FanYi extends JavaPlugin {
     public static final MiraiLogger LOGGER = INSTANCE.getLogger();
 
     private FanYi() {
-        super(new JvmPluginDescriptionBuilder("dong.bot.mirai.fanyi", "0.1")
+        super(new JvmPluginDescriptionBuilder("dong.bot.mirai.fanyi", "1.0")
                 .author("dong").info("翻译 bot").build());
     }
 
