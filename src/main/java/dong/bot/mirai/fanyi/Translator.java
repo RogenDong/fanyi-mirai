@@ -1,8 +1,9 @@
 package dong.bot.mirai.fanyi;
 
 import dong.bot.mirai.fanyi.enums.Languages;
+import org.jetbrains.annotations.NotNull;
 
-import static dong.bot.mirai.fanyi.Const.Tip.TODO;
+import java.util.Optional;
 
 /**
  * 翻译
@@ -10,7 +11,12 @@ import static dong.bot.mirai.fanyi.Const.Tip.TODO;
  *
  * @author dong
  */
-public abstract class Translator {
+public interface Translator {
+
+    /**
+     * 获取实例名
+     */
+    Optional<String> getName();
 
     /**
      * 自动识别原文语言并翻译为中文
@@ -18,32 +24,8 @@ public abstract class Translator {
      * @param original 原文
      * @return 中文译文
      */
-    public static String auto(String original) {
-        return TODO;
-    }
-
-    /**
-     * 指定原文语言，翻译为中文
-     *
-     * @param original 原文
-     * @param fromLang 原文语言
-     * @return 中文译文
-     */
-    public static String from(String original, Languages fromLang) {
-        return TODO;
-    }
-
-    /**
-     * 指定翻译目标语言<br/>
-     * - 自动识别原文语种<br/>
-     *
-     * @param original 中文原文
-     * @param toLang   目标语言
-     * @return 译文
-     */
-    public static String to(String original, Languages toLang) {
-        return TODO;
-    }
+    @NotNull
+    Optional<String> auto(@NotNull String original);
 
     /**
      * 指定原文语言和目标语言并翻译
@@ -53,8 +35,7 @@ public abstract class Translator {
      * @param toLang   译文语言
      * @return 译文
      */
-    public static String to(String original, Languages fromLang, Languages toLang) {
-        return TODO;
-    }
+    @NotNull
+    Optional<String> to(@NotNull String original, @NotNull Languages fromLang, @NotNull Languages toLang);
 
 }

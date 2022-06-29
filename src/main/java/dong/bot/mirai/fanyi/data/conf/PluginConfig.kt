@@ -1,6 +1,5 @@
 package dong.bot.mirai.fanyi.data.conf
 
-import dong.bot.mirai.fanyi.Const
 import dong.bot.mirai.fanyi.Const.Keyword
 import dong.bot.mirai.fanyi.Const.Tip
 import dong.bot.mirai.fanyi.enums.Keywords
@@ -23,12 +22,6 @@ object PluginConfig : AutoSavePluginConfig("fanyi") {
 
     @ValueDescription("API 密钥")
     var secretKeys: MutableMap<String, String> by value()
-
-    /**
-     * 语言参数的分隔符
-     */
-    @ValueDescription("语言参数的分隔符")
-    var langDelimiter: String by value(Const.LANG_DELIMITER)
 
     /**
      * 关键词集合
@@ -68,7 +61,7 @@ object PluginConfig : AutoSavePluginConfig("fanyi") {
      * 特定 API 的配置是否可用
      */
     fun unavailable(apiName: String) = unavailable() ||
-        apis.containsKey(apiName) || appIds.containsKey(apiName) || secretKeys.containsKey(apiName)
+        !apis.containsKey(apiName) || !appIds.containsKey(apiName) || !secretKeys.containsKey(apiName)
 
     /**
      * 特定 API 的配置是否可用
