@@ -7,7 +7,7 @@
   <!-- 这里可以改你的包名 -->
   <groupId>dong.bot.mirai</groupId>
   <artifactId>fanyi</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 
   <dependencies>
     <dependency>

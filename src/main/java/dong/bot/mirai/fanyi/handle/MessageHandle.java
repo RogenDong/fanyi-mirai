@@ -3,6 +3,7 @@ package dong.bot.mirai.fanyi.handle;
 import dong.bot.mirai.fanyi.FanYi;
 import dong.bot.mirai.fanyi.Translator;
 import dong.bot.mirai.fanyi.data.conf.PluginConfig;
+import dong.bot.mirai.fanyi.enums.Keywords;
 import dong.bot.mirai.fanyi.enums.Languages;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.MessageReceipt;
@@ -111,6 +112,70 @@ public abstract class MessageHandle {
     }
 
     /**
+     * 提示缺少参数
+     *
+     * @param event        上下文
+     * @param cacheReceipt 是否缓存回执
+     */
+    public static void lackArgs(MessageEvent event, boolean cacheReceipt) {
+        String translateTip = PluginConfig.INSTANCE.getTranslateTip();
+        replying(Tip.LACK_ARG + "\n" + translateTip, cacheReceipt, event);
+    }
+
+    /**
+     * 自动选择语言
+     *
+     * @param args   参数
+     * @param sender 查询者 id
+     * @param api    接口实例
+     * @return 译文
+     */
+    private static Optional<String> auto(String[] args, long sender, Translator api) {
+        var inp = String.join(SPACE, args);
+        // TODO 检测到关键词时才复用指定语言
+        if (USED_LANGUAGES.containsKey(sender)) {
+            var to = USED_LANGUAGES.get(sender);
+            return api.to(inp, Languages.Auto, to);
+        } else {
+            return api.auto(inp);
+        }
+    }
+
+    /**
+     * 指定语言
+     *
+     * @param args   参数
+     * @param sender 查询者 id
+     * @param api    接口实例
+     * @return 译文
+     */
+    private static Optional<String> appoint(String[] args, long sender, Translator api) {
+        var arg1 = args[0];
+        var lang = arg1.split('[' + LANG_DELIMITER + ']');
+        Languages from;
+        Languages to;
+        if (lang.length < 2) {
+            from = Languages.Auto;
+            to = Languages.Zh;
+        } else {
+            from = Languages.get(lang[0]);
+            to = (lang[1].length() > 0) ? Languages.get(lang[1]) : Languages.Zh;
+        }
+        var ori = new StringBuilder(api.getOriginalMaxLength());
+        for (int x = 1; x < args.length; x++) {
+            ori.append(args[x]);
+            ori.append(SPACE);
+        }
+        Optional<String> translation = api.to(ori.toString(), from, to);
+        translation.ifPresent(t -> {
+            if (to == Languages.Zh)
+                USED_LANGUAGES.remove(sender);// 移除缓存
+            else USED_LANGUAGES.put(sender, to);// 缓存用户选择的语言
+        });
+        return translation;
+    }
+
+    /**
      * 翻译
      *
      * @param event        上下文
@@ -119,13 +184,13 @@ public abstract class MessageHandle {
     public static void translate(@NotNull MessageEvent event, boolean cacheReceipt) {
         MessageChain reqMsg = event.getMessage();
         long sender = event.getSender().getId();
-        String[] args = reqMsg.contentToString().trim()
+        String[] args = reqMsg.contentToString()
+                .substring(Keywords.Translate.getWord().length() + 1).trim()
                 .replaceAll(SPACES_REGEX, SPACE).split(SPACE, 3);
 
         // 检查参数合法
-        if (args.length < 2) {
-            String translateTip = PluginConfig.INSTANCE.getTranslateTip();
-            replying(Tip.LACK_ARG + "\n" + translateTip, cacheReceipt, event);
+        if (args.length < 1) {
+            lackArgs(event, cacheReceipt);
             return;
         }
 
@@ -137,37 +202,10 @@ public abstract class MessageHandle {
             return;
         }
 
-        Optional<String> translation;
-        // 自动
-        if (args.length == 2 || !args[1].contains(LANG_DELIMITER)) {
-            if (USED_LANGUAGES.containsKey(sender)) {
-                var to = USED_LANGUAGES.get(sender);
-                translation = api.to(args[1], Languages.Auto, to);
-            } else {
-                translation = api.auto(args[1]);
-            }
-            translation.ifPresent(t -> replying(t, cacheReceipt, event));
-            return;
-        }
-
-        // 指定
-        var lang = args[1].split('[' + LANG_DELIMITER + ']');
-        Languages from = Languages.get(lang[0]);
-        Languages to;
-        if (lang.length > 1 && lang[1].length() > 0) {
-            to = Languages.get(lang[1]);
-        } else {
-            to = Languages.Zh;
-        }
-        translation = api.to(args[2], from, to);
+        String arg1 = args[0];
+        Optional<String> translation = arg1.contains(LANG_DELIMITER) ?
+                appoint(args, sender, api) :
+                auto(args, sender, api);
         translation.ifPresent(t -> replying(t, cacheReceipt, event));
-
-        if (to == Languages.Zh) {
-            // 移除缓存
-            USED_LANGUAGES.remove(sender);
-        } else {
-            // 缓存用户选择的语言
-            USED_LANGUAGES.put(sender, to);
-        }
     }
 }
