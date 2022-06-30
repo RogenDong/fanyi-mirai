@@ -1,5 +1,6 @@
 package dong.bot.mirai.fanyi.listen;
 
+import dong.bot.mirai.fanyi.Const;
 import dong.bot.mirai.fanyi.FanYi;
 import dong.bot.mirai.fanyi.enums.Keywords;
 import kotlin.coroutines.CoroutineContext;
@@ -64,12 +65,17 @@ public class MessageListener extends SimpleListenerHost {
     private void callByKeyword(@NotNull MessageEvent event, boolean cacheReceipt) {
         var msg = event.getMessage();
         var inp = msg.contentToString();
-        String transKeyword = Keywords.Translate.getWord();
         if (Keywords.Tips.equals(inp))
             showTip(event, cacheReceipt);
         else if (Keywords.Languages.equals(inp))
             showLanguages(event, cacheReceipt);
-        else if (inp.startsWith(transKeyword) && inp.length() > transKeyword.length())
-            translate(event, cacheReceipt);
+        else {
+            inp = inp.trim();
+            String transKeyword = Keywords.Translate.getWord();
+            if (Keywords.Translate.equals(inp))
+                lackArgs(event,cacheReceipt);
+            else if (inp.startsWith(transKeyword + Const.SPACE))
+                translate(event, cacheReceipt);
+        }
     }
 }

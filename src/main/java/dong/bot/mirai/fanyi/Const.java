@@ -30,9 +30,9 @@ public interface Const {
      */
     interface Keyword {
         /**
-         * 查询翻译的关键词（含空格）
+         * 查询翻译的关键词
          */
-        String TRANS = "ff ";
+        String TRANS = "ff";
 
         /**
          * 查看帮助的关键词
@@ -55,10 +55,12 @@ public interface Const {
         /**
          * 帮助文案
          */
-        String TRANS = Keyword.TRANS + "[原文语言" + LANG_DELIMITER + "译文语言] <需要翻译的文本>\n" +
-                "例：\n" + Keyword.TRANS + "en" + LANG_DELIMITER + "zh translate <- 英文翻译为中文\n" +
-                Keyword.TRANS + LANG_DELIMITER + "jp translate <- 自动识别原文并翻译为日文\n" +
-                Keyword.TRANS + "大丈夫です <- 自动识别原文并翻译为中文";
+        String TRANS = Keyword.TRANS + " [原文语言" + LANG_DELIMITER + "译文语言] <需要翻译的文本>\n" +
+                Keyword.TRANS + " ru" + LANG_DELIMITER + "zh Пролетарии всех стран, соединяйтесь! # 俄语翻译为中文\n" +
+                Keyword.TRANS + " en" + LANG_DELIMITER + " translate # 英文翻译为中文\n" +
+                Keyword.TRANS + SPACE + LANG_DELIMITER + "ru translate # 自动识别并翻译为俄语\n" +
+                Keyword.TRANS + SPACE + LANG_DELIMITER + " 私たちは連合します! # 自动识别并翻译为中文\n" +
+                Keyword.TRANS + " соединяйтесь! # 自动翻译为中文，或根据之前指定的语言翻译";
 
         String LACK_ARG = "查询缺少关键信息。";
 
@@ -78,5 +80,16 @@ public interface Const {
         String TTS = "tts";
         String DICT = "dict";
         String ACTION = "action";
+    }
+
+    /**
+     * 描述 Http 请求或响应正文的内容类别
+     */
+    interface MediaType {
+        String CONTENT_TYPE = "Content-Type";
+
+        String TYPE_FORM = "application/x-www-form-urlencoded";
+
+        String TYPE_JSON = "application/json; charset=utf-8";
     }
 }

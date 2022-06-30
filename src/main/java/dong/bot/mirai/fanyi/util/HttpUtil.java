@@ -9,6 +9,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static dong.bot.mirai.fanyi.Const.MediaType.*;
+
+/**
+ * Http 请求工具
+ *
+ * @author dong
+ */
 public class HttpUtil {
     /**
      * 最大连接时间
@@ -25,7 +32,7 @@ public class HttpUtil {
     /**
      * JSON格式
      */
-    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse("application/json; charset=utf-8");
+    public static final MediaType MEDIA_TYPE_JSON = MediaType.parse(TYPE_JSON);
     /**
      * HTTP 客户端
      */
@@ -112,7 +119,7 @@ public class HttpUtil {
             }
             Request.Builder reqBuilder = new Request.Builder()
                     .url(url).post(formBody.build());
-            reqBuilder.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            reqBuilder.addHeader(CONTENT_TYPE, TYPE_FORM);
             return call(reqBuilder);
         } catch (Exception ignored) {
         }
