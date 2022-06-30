@@ -33,6 +33,8 @@ public class BaiduFanyi implements Translator {
     private static final MiraiLogger LOGGER = FanYi.LOGGER;
     // 配置对象
     private static final PluginConfig CONF = PluginConfig.INSTANCE;
+    // 原文字符串最大长度
+    private static final int ORIGINAL_MAX_LEN = 20000;
     // 指定 api
     private String name;
     // 接口地址
@@ -91,6 +93,11 @@ public class BaiduFanyi implements Translator {
         if (CharUtil.isBlank(name))
             return Optional.empty();
         return Optional.of(name);
+    }
+
+    @Override
+    public int getOriginalMaxLength() {
+        return ORIGINAL_MAX_LEN;
     }
 
     @NotNull

@@ -19,6 +19,11 @@ public interface Translator {
     Optional<String> getName();
 
     /**
+     * 获取原文字符串最大长度
+     */
+    int getOriginalMaxLength();
+
+    /**
      * 自动识别原文语言并翻译为中文
      *
      * @param original 原文
